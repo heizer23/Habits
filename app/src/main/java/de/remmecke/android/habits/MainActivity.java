@@ -3,6 +3,8 @@ package de.remmecke.android.habits;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,14 +12,36 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mWeatherTextView;
+    private RecyclerView mRecyclerView;
+    private TaskAdapter mTaskAdapter;
+    private TextView mErrorMessageDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mWeatherTextView = findViewById(R.id.tv_weather_data);
+        mRecyclerView = findViewById(R.id.recyclerview_tasks);
+        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
+
+
+
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        /*
+         * Use this setting to improve performance if you know that changes in content do not
+         * change the child layout size in the RecyclerView
+         */
+        mRecyclerView.setHasFixedSize(true);
+        mTaskAdapter = new TaskAdapter();
+        mRecyclerView.setAdapter(mTaskAdapter);
+
+        loadTaskData();
+    }
+
+    private void loadTaskData(){
 
         String[] dummyWeatherData = {
                 "Today, May 17 - Clear - 17°C / 15°C",
@@ -33,15 +57,13 @@ public class MainActivity extends AppCompatActivity {
                 "Fri, May 27 - Hurricane - 21°C / 9°C",
                 "Sat, May 28 - Meteors - 16°C / 7°C",
                 "Sun, May 29 - Apocalypse - 16°C / 8°C",
-                "Mon, May 30 - Post Apocalypse - 15°C / 10°C",
+                "Mon, May 30 - Post Apo - 15°C / 10°C",
         };
 
-        for (String dummyWeatherDay : dummyWeatherData) {
-            mWeatherTextView.append(dummyWeatherDay + "\n\n\n");
-        }
-
+        mTaskAdapter.setTaskData(dummyWeatherData);
 
     }
+
 
     // Menu_______________________________________________________________________________Menu
     @Override
@@ -59,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-            mWeatherTextView.setText("Refreshed");
             return true;
         }
 

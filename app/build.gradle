@@ -24,7 +24,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.1.1'
 
     // COMPLETED (10) Remove this dependency as we won't be needing it for the project until later
-
+    compile 'com.android.support:recyclerview-v7:27.1.1'
     // Instrumentation dependencies use androidTestCompile
     // (as opposed to testCompile for local unit tests run in the JVM)
     androidTestCompile 'junit:junit:4.12'
