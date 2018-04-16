@@ -1,6 +1,7 @@
 package de.remmecke.android.habits;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +10,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import de.remmecke.android.habits.TaskAdapter.TaskAdapterOnClickHandler;
+
+public class MainActivity extends AppCompatActivity implements TaskAdapterOnClickHandler {
 
     private RecyclerView mRecyclerView;
     private TaskAdapter mTaskAdapter;
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
          * change the child layout size in the RecyclerView
          */
         mRecyclerView.setHasFixedSize(true);
-        mTaskAdapter = new TaskAdapter();
+        mTaskAdapter = new TaskAdapter(this);
         mRecyclerView.setAdapter(mTaskAdapter);
 
         loadTaskData();
@@ -88,4 +92,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(String taskName) {
+        Context context = this;
+        Toast.makeText(context, taskName, Toast.LENGTH_SHORT)
+                .show();
+    }
 }

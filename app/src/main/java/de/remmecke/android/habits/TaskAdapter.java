@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -17,18 +18,34 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskAdapterVie
 
     private String[] mTaskData;
 
-    public TaskAdapter(){
+    final private TaskAdapterOnClickHandler mClickHandler;
 
+    public interface TaskAdapterOnClickHandler {
+        void onClick(String taskName);
     }
 
-    public class TaskAdapterViewHolder extends RecyclerView.ViewHolder{
+    public TaskAdapter(TaskAdapterOnClickHandler onClickHandler ){
+        mClickHandler = onClickHandler;
+    }
+
+
+
+    public class TaskAdapterViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         public final TextView mTaskNameTextView;
 
         public TaskAdapterViewHolder(View view) {
             super(view);
-            mTaskNameTextView = (TextView) view.findViewById(R.id.tv_task_name);
+            mTaskNameTextView = view.findViewById(R.id.tv_task_name);
+
+            view.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v){
+            int adapterPosition = getAdapterPosition();
+            String taskName = mTaskData[adapterPosition];
+            mClickHandler.onClick(taskName);
+        }
 
     }
 
