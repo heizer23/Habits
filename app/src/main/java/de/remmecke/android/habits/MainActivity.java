@@ -1,101 +1,92 @@
 package de.remmecke.android.habits;
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import de.remmecke.android.habits.TaskAdapter.TaskAdapterOnClickHandler;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements TaskAdapterOnClickHandler {
+import de.remmecke.android.habits.data.Habit;
+import de.remmecke.android.habits.data.HabitViewModel;
+import de.remmecke.android.habits.data.HabitWithInfo;
 
-    private RecyclerView mRecyclerView;
-    private TaskAdapter mTaskAdapter;
-    private TextView mErrorMessageDisplay;
+public class MainActivity extends AppCompatActivity implements HabitsAdapter.HabitsAdapterOnClickHandler {
+
+    public static final int NEW_HABIT_ACTIVITY_REQUEST_CODE = 1;
+
+    private HabitViewModel mHabitViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = findViewById(R.id.recyclerview_tasks);
-        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview_tasks);
+        final HabitsAdapter adapter = new HabitsAdapter(this, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        mHabitViewModel = ViewModelProviders.of(this).get(HabitViewModel.class);
 
-
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-
-        /*
-         * Use this setting to improve performance if you know that changes in content do not
-         * change the child layout size in the RecyclerView
-         */
-        mRecyclerView.setHasFixedSize(true);
-        mTaskAdapter = new TaskAdapter(this);
-        mRecyclerView.setAdapter(mTaskAdapter);
-
-        loadTaskData();
+        mHabitViewModel.getmAllHabits().observe(this, new Observer<List<HabitWithInfo>>() {
+            @Override
+            public void onChanged(@Nullable List<HabitWithInfo> habits) {
+                adapter.setHabits(habits);
+            }
+        });
     }
 
-    private void loadTaskData(){
-
-        String[] dummyWeatherData = {
-                "Today, May 17 - Clear - 17°C / 15°C",
-                "Tomorrow - Cloudy - 19°C / 15°C",
-                "Thursday - Rainy- 30°C / 11°C",
-                "Friday - Thunderstorms - 21°C / 9°C",
-                "Saturday - Thunderstorms - 16°C / 7°C",
-                "Sunday - Rainy - 16°C / 8°C",
-                "Monday - Partly Cloudy - 15°C / 10°C",
-                "Tue, May 24 - Meatballs - 16°C / 18°C",
-                "Wed, May 25 - Cloudy - 19°C / 15°C",
-                "Thu, May 26 - Stormy - 30°C / 11°C",
-                "Fri, May 27 - Hurricane - 21°C / 9°C",
-                "Sat, May 28 - Meteors - 16°C / 7°C",
-                "Sun, May 29 - Apocalypse - 16°C / 8°C",
-                "Mon, May 30 - Post Apo - 15°C / 10°C",
-        };
-
-        mTaskAdapter.setTaskData(dummyWeatherData);
-
-    }
-
-
-    // Menu_______________________________________________________________________________Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
-        MenuInflater inflater = getMenuInflater();
-        /* Use the inflater's inflate method to inflate our menu layout to this menu */
-        inflater.inflate(R.menu.main_menu, menu);
-        /* Return true so that the menu is displayed in the Toolbar */
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_refresh) {
-            return true;
-        }
+        mHabitViewModel.setOccurenceNr();
+        String occNr = String.valueOf(mHabitViewModel.occurenceNr.get(0).habitId);
+
+        Toast.makeText(this,occNr,Toast.LENGTH_LONG).show();
+
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+//        if (requestCode == NEW_HABIT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+//            Habit habit = new Habit(data.getStringExtra(NewHabitActivity.EXTRA_REPLY));
+//            mHabitViewModel.insert(habit);
+//        }else{
+//            Toast.makeText(getApplicationContext(),
+//                    R.string.empty_not_saved,
+//                    Toast.LENGTH_LONG).show();
+//        }
+    }
 
     @Override
-    public void onClick(String taskName) {
-        Context context = this;
-        Toast.makeText(context, taskName, Toast.LENGTH_SHORT)
-                .show();
+    public void onClick(HabitWithInfo clickedHabit) {
+        mHabitViewModel.insertOccurrence(clickedHabit);
+        Toast.makeText(this,clickedHabit.getName(),Toast.LENGTH_LONG).show();
     }
 }

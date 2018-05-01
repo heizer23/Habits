@@ -23,4 +23,11 @@ public class ExampleInstrumentedTest {
 
         assertEquals("de.remmecke.android.habits", appContext.getPackageName());
     }
+
+    @Test
+    public void checkDb() throws Exception{
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        assertEquals("de.remmecke.android.habts", appContext.getPackageName());
+    }
+
 }

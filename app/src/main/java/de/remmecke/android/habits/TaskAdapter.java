@@ -35,7 +35,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskAdapterVie
 
         public TaskAdapterViewHolder(View view) {
             super(view);
-            mTaskNameTextView = view.findViewById(R.id.tv_task_name);
+            mTaskNameTextView = view.findViewById(R.id.tv_habit_name);
 
             view.setOnClickListener(this);
         }
