@@ -33,4 +33,5 @@ public class HabitViewModel extends AndroidViewModel {
         mRepository.insertOccurrence(habit);
     }
 
+
 }

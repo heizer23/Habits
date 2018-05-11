@@ -1,11 +1,19 @@
 <resources>
     <string name="app_name">Habits</string>
+    <string name="db_name">Habit_database</string>
+
 
     <!--Menue Main Activity-->
     <string name="action_refresh">Refresh</string>
+    <string name="action_new_habit">New Habit</string>
+    <string name="action_new_string">New One</string>
 
     <string name="error_message">
         An error has occurred. Please try again by clicking REFRESH
     </string>
+
+    <!--Menu New Habit Activity-->
+    <string name="button_save">Speichern</string>
+
 
 </resources>

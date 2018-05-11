@@ -1,7 +1,6 @@
 package de.remmecke.android.habits;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,15 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.List;
 
-import de.remmecke.android.habits.data.Habit;
 import de.remmecke.android.habits.data.HabitViewModel;
 import de.remmecke.android.habits.data.HabitWithInfo;
 
@@ -62,12 +58,20 @@ public class MainActivity extends AppCompatActivity implements HabitsAdapter.Hab
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        mHabitViewModel.setOccurenceNr();
-        String occNr = String.valueOf(mHabitViewModel.occurenceNr.get(0).habitId);
+        switch (item.getItemId()){
 
-        Toast.makeText(this,occNr,Toast.LENGTH_LONG).show();
-
-
+            case R.id.action_new_habit:
+                Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_refresh:
+                mHabitViewModel.setOccurenceNr();
+                String occNr = String.valueOf(mHabitViewModel.occurenceNr.get(0).habitId);
+                Toast.makeText(this,occNr,Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(this,"Default",Toast.LENGTH_SHORT).show();
+        }
         return super.onOptionsItemSelected(item);
     }
 

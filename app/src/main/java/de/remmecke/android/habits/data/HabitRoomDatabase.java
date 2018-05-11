@@ -1,5 +1,6 @@
 package de.remmecke.android.habits.data;
 
+import android.app.Application;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -8,21 +9,25 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+
 @Database(entities = {Habit.class, Occurrence.class}, version = 1)
 public abstract class HabitRoomDatabase extends RoomDatabase {
 
     public abstract HabitDao habitDao();
     public abstract OccurrenceDao occurenceDao();
 
+    private Context context;
     private static HabitRoomDatabase INSTANCE;
 
     public static HabitRoomDatabase getDatabase(final Context context){
+
         if (INSTANCE == null){
             synchronized (HabitRoomDatabase.class){
                 if(INSTANCE == null){
+                    String dbName = "Habit_database";
                     // Create database here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            HabitRoomDatabase.class, "Habit_database")
+                            HabitRoomDatabase.class, dbName)
                             .addCallback(sRoomDataBaseCallback)
                             .build();
                 }
@@ -65,4 +70,5 @@ public abstract class HabitRoomDatabase extends RoomDatabase {
             return null;
         }
     }
+
 }

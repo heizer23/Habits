@@ -65,6 +65,7 @@ public class HabitRepository {
         }
     }
 
+
     //TODO Überflüssige  Methoden löschen
     public List<Occurrence> getOccurences(String habitName){
         GetOccAsync getOccAsync = new GetOccAsync(mOccurrenceDao);

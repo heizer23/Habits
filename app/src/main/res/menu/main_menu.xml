@@ -11,4 +11,9 @@
         android:orderInCategory="1"
         android:title="@string/action_refresh"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_new_habit"
+        android:orderInCategory="1"
+        android:title="@string/action_new_habit"
+        app:showAsAction="ifRoom"/>
 </menu>
