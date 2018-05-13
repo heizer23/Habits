@@ -57,17 +57,15 @@ public class MainActivity extends AppCompatActivity implements HabitsAdapter.Hab
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        Intent intent;
         switch (item.getItemId()){
 
             case R.id.action_new_habit:
-                Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
+                intent = new Intent(MainActivity.this, NewHabitActivity.class);
                 startActivity(intent);
                 break;
             case R.id.action_refresh:
-                mHabitViewModel.setOccurenceNr();
-                String occNr = String.valueOf(mHabitViewModel.occurenceNr.get(0).habitId);
-                Toast.makeText(this,occNr,Toast.LENGTH_SHORT).show();
+
                 break;
             default:
                 Toast.makeText(this,"Default",Toast.LENGTH_SHORT).show();
@@ -75,22 +73,18 @@ public class MainActivity extends AppCompatActivity implements HabitsAdapter.Hab
         return super.onOptionsItemSelected(item);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-
-//        if (requestCode == NEW_HABIT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
-//            Habit habit = new Habit(data.getStringExtra(NewHabitActivity.EXTRA_REPLY));
-//            mHabitViewModel.insert(habit);
-//        }else{
-//            Toast.makeText(getApplicationContext(),
-//                    R.string.empty_not_saved,
-//                    Toast.LENGTH_LONG).show();
-//        }
-    }
-
     @Override
-    public void onClick(HabitWithInfo clickedHabit) {
-        mHabitViewModel.insertOccurrence(clickedHabit);
-        Toast.makeText(this,clickedHabit.getName(),Toast.LENGTH_LONG).show();
+    public void onClick(HabitWithInfo clickedHabit, String action) {
+        switch (action){
+            case "addOccurrence":
+                mHabitViewModel.insertOccurrence(clickedHabit);
+                break;
+            case "editHabit":
+                int habitId = clickedHabit.getHabitId();
+                Intent intent = new Intent(MainActivity.this, HabitInfoActivity.class);
+                intent.putExtra("habitId", habitId);
+                startActivity(intent);
+                break;
+        }
     }
 }

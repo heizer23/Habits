@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,16 +17,13 @@ import java.util.List;
 import de.remmecke.android.habits.data.Habit;
 import de.remmecke.android.habits.data.HabitWithInfo;
 
-/**
- * Created by Linse on 21.04.2018.
- */
 
 public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewHolder> {
 
     private HabitsAdapterOnClickHandler mClickHandler;
 
     public interface HabitsAdapterOnClickHandler{
-        void onClick(HabitWithInfo clickedHabit);
+        void onClick(HabitWithInfo clickedHabit, String action);
     }
 
     HabitsAdapter(Context context, HabitsAdapterOnClickHandler clickHandler){
@@ -36,20 +35,36 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         private final  TextView habitIdView;
         private final TextView habitItemView;
         private final TextView timePassedView;
+        private final ImageView butt_add;
+        private final LinearLayout itemContainer;
 
         public HabitViewHolder(View itemView) {
             super(itemView);
             this.habitItemView = itemView.findViewById(R.id.tv_habit_name);
             this.habitIdView = itemView.findViewById(R.id.tv_habit_info);
             this.timePassedView = itemView.findViewById(R.id.tv_time_passed);
-            habitItemView.setOnClickListener(this);
+            this.butt_add = itemView.findViewById(R.id.button_add);
+            this.itemContainer = itemView.findViewById(R.id.itemcontainer);
+            itemContainer.setOnClickListener(this);
+            butt_add.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            String action = null;
+
+            switch (v.getId()){
+                case R.id.button_add:
+                    action = "addOccurrence";
+                    break;
+                case R.id.itemcontainer:
+                    action = "editHabit";
+                    break;
+            }
+
             int adapterPosition = getAdapterPosition();
             HabitWithInfo current = mHabits.get(adapterPosition);
-            mClickHandler.onClick(current);
+            mClickHandler.onClick(current, action);
         }
     }
 

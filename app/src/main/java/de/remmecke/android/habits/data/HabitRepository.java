@@ -22,6 +22,7 @@ public class HabitRepository {
         mAllHabits = mHabitDao.getAllHabitsWithInfo();
     }
 
+
     public LiveData<List<HabitWithInfo>> getmAllHabits(){
         return mAllHabits;
     }
@@ -98,4 +99,58 @@ public class HabitRepository {
             super.onPostExecute(s);
         }
     }
+
+
+    public Habit getHabit(int habitId){
+        GetHabitAsync getHabitAsync = new GetHabitAsync(mHabitDao);
+        Habit result = null;
+        try {
+            result= getHabitAsync.execute(habitId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static class GetHabitAsync extends AsyncTask<Integer, Void, Habit> {
+
+        private HabitDao mAsyncTaskDao;
+
+        public GetHabitAsync(HabitDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Habit doInBackground(Integer... habitIds) {
+            return mAsyncTaskDao.getHabits(habitIds[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Habit habit) {
+            super.onPostExecute(habit);
+        }
+    }
+
+    public void updateHabit(Habit habit){
+        new UpdateAsyncTask(mHabitDao).execute(habit);
+    }
+
+    private static class UpdateAsyncTask extends AsyncTask<Habit, Void, Void> {
+
+        private HabitDao mAsyncTaskDao;
+
+        public UpdateAsyncTask(HabitDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Habit... params) {
+            mAsyncTaskDao.update(params[0]);
+            return null;
+        }
+    }
+
+
 }

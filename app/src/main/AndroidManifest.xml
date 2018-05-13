@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".NewHabitActivity"></activity>
+        <activity android:name=".HabitInfoActivity"></activity>
     </application>
 
 </manifest>
