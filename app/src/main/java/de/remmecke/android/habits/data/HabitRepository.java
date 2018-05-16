@@ -67,12 +67,11 @@ public class HabitRepository {
     }
 
 
-    //TODO Überflüssige  Methoden löschen
-    public List<Occurrence> getOccurences(String habitName){
+    public List<Occurrence> getOccurences(int habitId){
         GetOccAsync getOccAsync = new GetOccAsync(mOccurrenceDao);
         List<Occurrence> result = null;
         try {
-            result= getOccAsync.execute(habitName).get();
+            result= getOccAsync.execute(habitId).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -81,7 +80,7 @@ public class HabitRepository {
         return result;
     }
 
-    private static class GetOccAsync extends AsyncTask<String, Void, List<Occurrence>> {
+    private static class GetOccAsync extends AsyncTask<Integer, Void, List<Occurrence>> {
 
         private OccurrenceDao mAsyncTaskDao;
 
@@ -90,8 +89,8 @@ public class HabitRepository {
         }
 
         @Override
-        protected List<Occurrence> doInBackground(String... habitNames) {
-            return mAsyncTaskDao.findOccurencesOfHabit(habitNames[0]);
+        protected List<Occurrence> doInBackground(Integer... habitIds) {
+            return mAsyncTaskDao.findOccurencesOfHabitId(habitIds[0]);
         }
 
         @Override
@@ -100,6 +99,38 @@ public class HabitRepository {
         }
     }
 
+
+    public HabitWithInfo getHabitWithInfo(int habitId){
+        GetHabitWithInfoAsync getHabitWithInfoAsync = new GetHabitWithInfoAsync(mHabitDao);
+        HabitWithInfo result = null;
+        try {
+            result= getHabitWithInfoAsync.execute(habitId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static class GetHabitWithInfoAsync extends AsyncTask<Integer, Void, HabitWithInfo> {
+
+        private HabitDao mAsyncTaskDao;
+
+        public GetHabitWithInfoAsync(HabitDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected HabitWithInfo doInBackground(Integer... habitIds) {
+            return mAsyncTaskDao.getHabitWithInfo(habitIds[0]);
+        }
+
+        @Override
+        protected void onPostExecute(HabitWithInfo habit) {
+            super.onPostExecute(habit);
+        }
+    }
 
     public Habit getHabit(int habitId){
         GetHabitAsync getHabitAsync = new GetHabitAsync(mHabitDao);

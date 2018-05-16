@@ -1,72 +1,90 @@
 package de.remmecke.android.habits;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
+
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Observer;
 
 import de.remmecke.android.habits.data.Habit;
 import de.remmecke.android.habits.data.HabitRepository;
+import de.remmecke.android.habits.data.HabitWithInfo;
+import de.remmecke.android.habits.data.Occurrence;
 
 public class HabitInfoActivity  extends AppCompatActivity implements View.OnClickListener{
 
-    EditText etName;
-    Button btSave;
-    Button btDelete;
-    HabitRepository mRepository;
-    Habit habit;
-    GraphView graph;
+    private EditText etName;
+    private Button btSave;
+    private Button btDelete;
+    private TextView tvLasttime;
+    private TextView tvCounter;
+    private GraphView graph;
+
+    private HabitInfoViewModel mViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mod_habit);
-
+        setContentView(R.layout.activity_habit_info);
 
         etName = findViewById(R.id.et_name);
+        tvCounter = findViewById(R.id.tv_counter);
+        tvLasttime = findViewById(R.id.tv_lasttime);
+        graph = findViewById(R.id.graph);
         btSave = findViewById(R.id.button_save);
         btDelete = findViewById(R.id.button_delete);
 
 
         btSave.setOnClickListener(this);
         btDelete.setOnClickListener(this);
-        mRepository   = new HabitRepository(this.getApplication());
+
 
         Bundle bundle = getIntent().getExtras();
         int habitId = bundle.getInt("habitId");
 
-        habit = mRepository.getHabit(habitId);
-        etName.setText(habit.getName());
+        mViewModel = ViewModelProviders.of(this, new ViewModelFactory(this.getApplication(), habitId)).get(HabitInfoViewModel.class);
 
-        graph = findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
-        graph.addSeries(series);
-
-
+        setUpGui();
+        makeDailyGraph();
     }
 
+    private void setUpGui(){
+        etName.setText(mViewModel.getHabitName());
+        tvCounter.setText(mViewModel.getHabitCounterString());
+        tvLasttime.setText(mViewModel.getHabitLasttimeString());
+    }
 
     @Override
     public void onClick(View v) {
 
         switch (v.getId()){
             case R.id.button_delete:
-                Toast.makeText(this,"Delete",Toast.LENGTH_LONG).show();
+                mViewModel.toggleFrequency();
+                makeDailyGraph();
                 break;
             case R.id.button_save:
-                updateHabit();
+                mViewModel.updateHabit(etName.getText().toString());
                 finish();
                 Toast.makeText(this,"Änderungen gespeichert",Toast.LENGTH_LONG).show();
                 break;
@@ -74,9 +92,31 @@ public class HabitInfoActivity  extends AppCompatActivity implements View.OnClic
 
     }
 
-    private void updateHabit(){
-        habit.setName(etName.getText().toString());
-        mRepository.updateHabit(habit);
+
+
+    private void makeDailyGraph(){
+        DataPoint[] dataPoints = mViewModel.getGraphDatapoints();
+        graph.removeAllSeries();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<>(dataPoints);
+        graph.addSeries(series);
+
+
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this, mViewModel.getDateFormat()));
+        graph.getGridLabelRenderer().setNumHorizontalLabels(2); // only 4 because of the space
+        graph.getGridLabelRenderer().setNumVerticalLabels(3);
+
+      //   set manual x bounds to have nice steps
+        graph.getViewport().setMinY(1.0);
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinX(dataPoints[0].getX());
+        graph.getViewport().setMaxX(dataPoints[dataPoints.length-1].getX());
+        graph.getViewport().setXAxisBoundsManual(true);
+
+        // as we use dates as labels, the human rounding to nice readable numbers
+        // is not necessary
+        graph.getGridLabelRenderer().setHumanRounding(false);
+       // graph.getViewport().setScrollable(true);
+      //  graph.getViewport().setScalable(true);
     }
 
 }

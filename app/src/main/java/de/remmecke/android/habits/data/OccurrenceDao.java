@@ -16,10 +16,10 @@ public interface OccurrenceDao {
 
     @Query("SELECT * " +
             "FROM Occurrence " +
-            "INNER JOIN Habit ON Occurrence.habit_id = Habit.id " +
-            "WHERE Habit.name LIKE :habitName "
+            "WHERE habit_id = :habitId " +
+            "order by id asc"
     )
-    List<Occurrence> findOccurencesOfHabit(String habitName);
+    List<Occurrence> findOccurencesOfHabitId(int habitId);
 
     @Query("SELECT habit_id from Occurrence")
     List<Occurrence> getOccurrences();

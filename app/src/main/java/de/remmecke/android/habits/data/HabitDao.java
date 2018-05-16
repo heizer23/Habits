@@ -36,4 +36,12 @@ public interface HabitDao {
     )
     LiveData<List<HabitWithInfo>> getAllHabitsWithInfo();
 
+    @Query("SELECT habit.id as habitId, habit.name as name, COUNT(Occurrence.habit_id) as count, " +
+            "max(Occurrence.timeStamp) as lastTime " +
+            "FROM Habit " +
+            "LEFT JOIN Occurrence ON Occurrence.habit_id = Habit.id " +
+            " where habit.id = :habitId "
+    )
+    HabitWithInfo getHabitWithInfo(int habitId);
+
 }

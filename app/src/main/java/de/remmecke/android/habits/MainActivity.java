@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import de.remmecke.android.habits.data.HabitViewModel;
 import de.remmecke.android.habits.data.HabitWithInfo;
 
 public class MainActivity extends AppCompatActivity implements HabitsAdapter.HabitsAdapterOnClickHandler {
@@ -65,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements HabitsAdapter.Hab
                 startActivity(intent);
                 break;
             case R.id.action_refresh:
-
+                intent = new Intent(MainActivity.this, TestActivity.class);
+                startActivity(intent);
                 break;
             default:
                 Toast.makeText(this,"Default",Toast.LENGTH_SHORT).show();
