@@ -26,7 +26,8 @@ public class HabitInfoViewModel extends AndroidViewModel {
     private HabitRepository mRepository;
     private HabitWithInfo habitWithInfo;
     private List<Occurrence> occurrences;
-    private String frequency = "month";
+    private String frequency = "day";
+    //private String frequency = "month";
 
     public HabitInfoViewModel(@NonNull Application application, int habitId) {
         super(application);
