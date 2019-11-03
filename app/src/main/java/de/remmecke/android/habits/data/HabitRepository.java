@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 public class HabitRepository {
 
-    private  HabitDao mHabitDao;
+    private HabitDao mHabitDao;
     private OccurrenceDao mOccurrenceDao;
 
     private LiveData<List<HabitWithInfo>> mAllHabits;

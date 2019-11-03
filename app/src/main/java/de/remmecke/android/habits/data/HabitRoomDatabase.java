@@ -24,7 +24,7 @@ public abstract class HabitRoomDatabase extends RoomDatabase {
         if (INSTANCE == null){
             synchronized (HabitRoomDatabase.class){
                 if(INSTANCE == null){
-                    String dbName = "Habit_database";
+                    String dbName = "Habit_database.sqlite";
                     // Create database here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             HabitRoomDatabase.class, dbName)
