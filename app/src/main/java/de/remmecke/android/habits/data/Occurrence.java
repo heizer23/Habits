@@ -24,9 +24,16 @@ public class Occurrence {
 
     public Date timeStamp;
 
+    @ColumnInfo(name="target_time")
+    public Date targetTime;
+
+    public Integer success;
+
     public Occurrence(Integer habitId) {
         this.habitId = habitId;
         timeStamp = new Date();
+        targetTime = new Date();
+        success = 1;
     }
 
 

@@ -5,12 +5,13 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 
-@Database(entities = {Habit.class, Occurrence.class}, version = 1)
+@Database(entities = {Habit.class, Occurrence.class}, version = 2)
 public abstract class HabitRoomDatabase extends RoomDatabase {
 
     public abstract HabitDao habitDao();
@@ -29,6 +30,7 @@ public abstract class HabitRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             HabitRoomDatabase.class, dbName)
                             .addCallback(sRoomDataBaseCallback)
+                            .addMigrations(MIGRATION_1_2)
                             .build();
                 }
             }
@@ -45,6 +47,20 @@ public abstract class HabitRoomDatabase extends RoomDatabase {
                    // new PopulateDbAsync(INSTANCE).execute();
                 }
             };
+
+
+    static final Migration MIGRATION_1_2 = new Migration(1, 2)  {
+        @Override
+        public void migrate(SupportSQLiteDatabase INSTANCE) {
+
+            INSTANCE.execSQL("ALTER TABLE Occurrence "
+                    + " ADD COLUMN success INTEGER");
+
+            INSTANCE.execSQL("ALTER TABLE Occurrence  "
+                    + " ADD COLUMN target_time INTEGER");
+        }
+    };
+
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
         private final HabitDao mDao;
