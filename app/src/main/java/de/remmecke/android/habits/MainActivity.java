@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import de.remmecke.android.habits.data.HabitWithInfo;
+import de.remmecke.android.habits.data.Occurrence;
 
 public class MainActivity extends AppCompatActivity implements HabitsAdapter.HabitsAdapterOnClickHandler {
 
@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity implements HabitsAdapter.Hab
 
         mHabitViewModel = ViewModelProviders.of(this).get(HabitViewModel.class);
 
-        mHabitViewModel.getmAllHabits().observe(this, new Observer<List<HabitWithInfo>>() {
+        mHabitViewModel.getmAllHabits().observe(this, new Observer<List<Occurrence>>() {
             @Override
-            public void onChanged(@Nullable List<HabitWithInfo> habits) {
-                adapter.setHabits(habits);
+            public void onChanged(@Nullable List<Occurrence> occs) {
+                adapter.setHabits(occs);
             }
         });
     }
@@ -74,16 +74,17 @@ public class MainActivity extends AppCompatActivity implements HabitsAdapter.Hab
     }
 
     @Override
-    public void onClick(HabitWithInfo clickedHabit, String action) {
+    public void onClick(Occurrence clickedOcc, String action) {
         switch (action){
             case "addOccurrence":
-                mHabitViewModel.insertOccurrence(clickedHabit);
+                clickedOcc.setName("test");
+                mHabitViewModel.editOcc(clickedOcc, "huh");
                 break;
             case "editHabit":
-                int habitId = clickedHabit.getHabitId();
-                Intent intent = new Intent(MainActivity.this, HabitInfoActivity.class);
-                intent.putExtra("habitId", habitId);
-                startActivity(intent);
+//                int habitId = clickedHabit.getHabitId();
+//                Intent intent = new Intent(MainActivity.this, HabitInfoActivity.class);
+//                intent.putExtra("habitId", habitId);
+//                startActivity(intent);
                 break;
         }
     }

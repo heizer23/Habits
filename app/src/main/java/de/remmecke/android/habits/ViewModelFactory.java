@@ -15,8 +15,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     }
 
 
-    @Override
-    public <T extends ViewModel> T create(Class<T> modelClass) {
-        return (T) new HabitInfoViewModel(mApplication, mHabitId);
-    }
+   // @Override
+   // public <T extends ViewModel> T create(Class<T> modelClass) {
+     //   return (T) new HabitInfoViewModel(mApplication, mHabitId);
+  //  }
 }

@@ -9,32 +9,58 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-@Entity(foreignKeys = {
-        @ForeignKey(entity = Habit.class,
-                parentColumns = "id",
-                childColumns = "habit_id")})
+@Entity()
 @TypeConverters(DateConverter.class)
 public class Occurrence {
 
     @PrimaryKey(autoGenerate = true)
     public Integer id;
 
-    @ColumnInfo(name="habit_id")
-    public Integer habitId;
+    private String name;
 
-    public Date timeStamp;
+    private Date timeStamp;
 
     @ColumnInfo(name="target_time")
-    public Date targetTime;
+    private Date targetTime;
 
-    public Integer success;
+    private Integer success;
 
-    public Occurrence(Integer habitId) {
-        this.habitId = habitId;
+    public Occurrence(String name) {
+        this.name = name;
         timeStamp = new Date();
-        targetTime = new Date();
-        success = 1;
+        this.targetTime = new Date();
+        success = 0;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public Date getTargetTime() {
+        return targetTime;
+    }
+
+    public void setTargetTime(Date targetTime) {
+        this.targetTime = targetTime;
+    }
+
+    public Integer getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Integer success) {
+        this.success = success;
+    }
 }

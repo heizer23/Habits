@@ -7,13 +7,13 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import de.remmecke.android.habits.data.Occurrence;
 import de.remmecke.android.habits.data.HabitRepository;
-import de.remmecke.android.habits.data.HabitWithInfo;
 
 public class HabitViewModel extends AndroidViewModel {
 
     private HabitRepository mRepository;
-    private LiveData<List<HabitWithInfo>> mAllHabits;
+    private LiveData<List<Occurrence>> mAllHabits;
 
 
     public HabitViewModel(@NonNull Application application) {
@@ -22,10 +22,12 @@ public class HabitViewModel extends AndroidViewModel {
         mAllHabits = mRepository.getmAllHabits();
     }
 
-    public LiveData<List<HabitWithInfo>> getmAllHabits() {return mAllHabits;}
+    public LiveData<List<Occurrence>> getmAllHabits() {return mAllHabits;}
 
-    public void insertOccurrence(HabitWithInfo habit){
-        mRepository.insertOccurrence(habit);
+    public void editOcc(Occurrence occ, String newName){
+        occ.setName(newName);
+        String test  = occ.getName();
+        mRepository.updateOcc(occ);
     }
 
 

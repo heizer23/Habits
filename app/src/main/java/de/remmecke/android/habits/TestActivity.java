@@ -16,7 +16,7 @@ import java.util.Date;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener{
 
-    HabitInfoViewModel mViewModel;
+    //HabitInfoViewModel mViewModel;
     TextView tv1;
     TextView tv2;
     Button button;
@@ -33,7 +33,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         button = findViewById(R.id.button1);
         button.setOnClickListener(this);
 
-        mViewModel = ViewModelProviders.of(this, new ViewModelFactory(this.getApplication(), 1)).get(HabitInfoViewModel.class);
+    //    mViewModel = ViewModelProviders.of(this, new ViewModelFactory(this.getApplication(), 1)).get(HabitInfoViewModel.class);
 
       //  timeStamp = mViewModel.getFirstOcc();
         setUp();

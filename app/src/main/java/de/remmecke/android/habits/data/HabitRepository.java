@@ -9,48 +9,28 @@ import java.util.concurrent.ExecutionException;
 
 public class HabitRepository {
 
-    private HabitDao mHabitDao;
     private OccurrenceDao mOccurrenceDao;
 
-    private LiveData<List<HabitWithInfo>> mAllHabits;
+    private LiveData<List<Occurrence>> mAllHabits;
 
 
     public HabitRepository(Application application){
         HabitRoomDatabase db = HabitRoomDatabase.getDatabase(application);
-        mHabitDao = db.habitDao();
         mOccurrenceDao = db.occurenceDao();
-        mAllHabits = mHabitDao.getAllHabitsWithInfo();
+        mAllHabits = mOccurrenceDao.getOccurrences();
     }
 
 
-    public LiveData<List<HabitWithInfo>> getmAllHabits(){
+    public LiveData<List<Occurrence>> getmAllHabits(){
         return mAllHabits;
     }
 
-    public void insertHabit(Habit habit){
-        new insertAsyncTask(mHabitDao).execute(habit);
+
+    public void insertOccurrence(Occurrence occ){
+        new insertAsyncOccurrence(mOccurrenceDao).execute(occ);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Habit, Void, Void> {
-
-        private HabitDao mAsyncTaskDao;
-
-        public insertAsyncTask(HabitDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Habit... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
-    }
-
-    public void insertOccurrence(HabitWithInfo habit){
-        new insertAsyncOccurrence(mOccurrenceDao).execute(habit);
-    }
-
-    private static class insertAsyncOccurrence extends AsyncTask<HabitWithInfo, Void, Void> {
+    private static class insertAsyncOccurrence extends AsyncTask<Occurrence, Void, Void> {
 
         private OccurrenceDao mAsyncOccDao;
 
@@ -59,19 +39,19 @@ public class HabitRepository {
         }
 
         @Override
-        protected Void doInBackground(final HabitWithInfo... params) {
-            Occurrence newOcc = new Occurrence(params[0].getHabitId());
+        protected Void doInBackground(final Occurrence... params) {
+            Occurrence newOcc = params[0];
             mAsyncOccDao.insert(newOcc);
             return null;
         }
     }
 
 
-    public List<Occurrence> getOccurences(int habitId){
+    public List<Occurrence> getOccurences(){
         GetOccAsync getOccAsync = new GetOccAsync(mOccurrenceDao);
         List<Occurrence> result = null;
         try {
-            result= getOccAsync.execute(habitId).get();
+            result= getOccAsync.execute(121).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -90,7 +70,7 @@ public class HabitRepository {
 
         @Override
         protected List<Occurrence> doInBackground(Integer... habitIds) {
-            return mAsyncTaskDao.findOccurencesOfHabitId(habitIds[0]);
+            return mAsyncTaskDao.findOccurences();
         }
 
         @Override
@@ -99,89 +79,24 @@ public class HabitRepository {
         }
     }
 
+    public void updateOcc(Occurrence occ){
+        UpdateOccAsync updateAsync = new UpdateOccAsync(mOccurrenceDao);
+        updateAsync.execute(occ);
 
-    public HabitWithInfo getHabitWithInfo(int habitId){
-        GetHabitWithInfoAsync getHabitWithInfoAsync = new GetHabitWithInfoAsync(mHabitDao);
-        HabitWithInfo result = null;
-        try {
-            result= getHabitWithInfoAsync.execute(habitId).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
-    private static class GetHabitWithInfoAsync extends AsyncTask<Integer, Void, HabitWithInfo> {
+    public static class UpdateOccAsync extends AsyncTask<Occurrence, Void, Void>{
+        private OccurrenceDao mAsyncTaskDao;
 
-        private HabitDao mAsyncTaskDao;
-
-        public GetHabitWithInfoAsync(HabitDao dao) {
+        public UpdateOccAsync(OccurrenceDao dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
-        protected HabitWithInfo doInBackground(Integer... habitIds) {
-            return mAsyncTaskDao.getHabitWithInfo(habitIds[0]);
-        }
-
-        @Override
-        protected void onPostExecute(HabitWithInfo habit) {
-            super.onPostExecute(habit);
-        }
-    }
-
-    public Habit getHabit(int habitId){
-        GetHabitAsync getHabitAsync = new GetHabitAsync(mHabitDao);
-        Habit result = null;
-        try {
-            result= getHabitAsync.execute(habitId).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private static class GetHabitAsync extends AsyncTask<Integer, Void, Habit> {
-
-        private HabitDao mAsyncTaskDao;
-
-        public GetHabitAsync(HabitDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Habit doInBackground(Integer... habitIds) {
-            return mAsyncTaskDao.getHabits(habitIds[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Habit habit) {
-            super.onPostExecute(habit);
-        }
-    }
-
-    public void updateHabit(Habit habit){
-        new UpdateAsyncTask(mHabitDao).execute(habit);
-    }
-
-    private static class UpdateAsyncTask extends AsyncTask<Habit, Void, Void> {
-
-        private HabitDao mAsyncTaskDao;
-
-        public UpdateAsyncTask(HabitDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Habit... params) {
-            mAsyncTaskDao.update(params[0]);
+        protected Void doInBackground(Occurrence... occ) {
+            mAsyncTaskDao.updateOcc(occ);
             return null;
         }
     }
-
 
 }

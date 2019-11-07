@@ -1,6 +1,5 @@
 package de.remmecke.android.habits.data;
 
-import android.app.Application;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -11,10 +10,9 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 
-@Database(entities = {Habit.class, Occurrence.class}, version = 2)
+@Database(entities = {Occurrence.class}, version = 4)
 public abstract class HabitRoomDatabase extends RoomDatabase {
 
-    public abstract HabitDao habitDao();
     public abstract OccurrenceDao occurenceDao();
 
     private Context context;
@@ -30,7 +28,8 @@ public abstract class HabitRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             HabitRoomDatabase.class, dbName)
                             .addCallback(sRoomDataBaseCallback)
-                            .addMigrations(MIGRATION_1_2)
+                            .fallbackToDestructiveMigration()
+                         //   .addMigrations(MIGRATION_1_2)
                             .build();
                 }
             }
@@ -63,26 +62,24 @@ public abstract class HabitRoomDatabase extends RoomDatabase {
 
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-        private final HabitDao mDao;
         private final OccurrenceDao mOccurrenceDao;
 
 
         PopulateDbAsync(HabitRoomDatabase db){
-            mDao = db.habitDao();
             mOccurrenceDao = db.occurenceDao();
         }
 
         @Override
         protected Void doInBackground(final Void... params) {
             mOccurrenceDao.deleteAll();
-            mDao.deleteAll();
-
-
-            Habit habit = new Habit("Hello");
-            mDao.insert(habit);
-
-            habit = new Habit("World");
-            mDao.insert(habit);
+//            mDao.deleteAll();
+//
+//
+//            Occurrence habit = new Occurrence("Hello");
+//            mDao.insert(habit);
+//
+//            habit = new Occurrence("World");
+//            mDao.insert(habit);
             return null;
         }
     }

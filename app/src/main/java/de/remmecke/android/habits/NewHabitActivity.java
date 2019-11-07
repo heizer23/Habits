@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import de.remmecke.android.habits.data.Habit;
+import de.remmecke.android.habits.data.Occurrence;
 import de.remmecke.android.habits.data.HabitRepository;
 
 public class NewHabitActivity  extends AppCompatActivity implements View.OnClickListener{
@@ -33,10 +33,9 @@ public class NewHabitActivity  extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         String habitname = etName.getText().toString();
-        Habit habit = new Habit(habitname);
-
-        mRepository.insertHabit(habit);
-        String toast = "Habit " + habitname + " wurde gespeichert";
+        Occurrence occ = new Occurrence(habitname);
+        mRepository.insertOccurrence(occ);
+        String toast = "Occurrence " + habitname + " wurde gespeichert";
         Toast.makeText(this,toast,Toast.LENGTH_LONG).show();
         finish();
     }

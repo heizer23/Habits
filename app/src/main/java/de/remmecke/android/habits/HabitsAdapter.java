@@ -1,7 +1,6 @@
 package de.remmecke.android.habits;
 
 
-import android.app.Application;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,12 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
-import de.remmecke.android.habits.data.Habit;
-import de.remmecke.android.habits.data.HabitWithInfo;
+import de.remmecke.android.habits.data.Occurrence;
 
 
 public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewHolder> {
@@ -23,7 +20,7 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
     private HabitsAdapterOnClickHandler mClickHandler;
 
     public interface HabitsAdapterOnClickHandler{
-        void onClick(HabitWithInfo clickedHabit, String action);
+        void onClick(Occurrence clickedOcc, String action);
     }
 
     HabitsAdapter(Context context, HabitsAdapterOnClickHandler clickHandler){
@@ -63,13 +60,13 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
             }
 
             int adapterPosition = getAdapterPosition();
-            HabitWithInfo current = mHabits.get(adapterPosition);
+            Occurrence current = mOccurrences.get(adapterPosition);
             mClickHandler.onClick(current, action);
         }
     }
 
     private final LayoutInflater mInflater;
-    private List<HabitWithInfo> mHabits;
+    private List<Occurrence> mOccurrences;
 
 
 
@@ -82,26 +79,30 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
 
     @Override
     public void onBindViewHolder(HabitViewHolder holder, int position) {
-        if(mHabits != null){
-            HabitWithInfo current = mHabits.get(position);
+        if(mOccurrences != null){
+            Occurrence current = mOccurrences.get(position);
             holder.habitItemView.setText(current.getName());
-            Integer count = current.getCount();
+            Integer count = 2424;
             holder.habitIdView.setText(String.valueOf(count));
-            holder.timePassedView.setText(current.getTimePassed());
+            holder.timePassedView.setText(String.valueOf(current.getTargetTime()));
         }else{
-            holder.habitItemView.setText("No Habit");
+            holder.habitItemView.setText("No Occurrence");
         }
     }
 
-    void setHabits(List<HabitWithInfo> habits){
-        mHabits = habits;
+    void setHabits(List<Occurrence> occs){
+        mOccurrences = occs;
+        notifyDataSetChanged();
+    }
+
+    public void updateListView(){
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        if(mHabits!= null)
-            return mHabits.size();
+        if(mOccurrences != null)
+            return mOccurrences.size();
         return 0;
     }
 
