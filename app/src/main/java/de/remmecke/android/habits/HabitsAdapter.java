@@ -83,7 +83,7 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
             Occurrence current = mOccurrences.get(position);
             holder.habitItemView.setText(current.getName());
             Integer count = 2424;
-            holder.habitIdView.setText(String.valueOf(count));
+            holder.habitIdView.setText(String.valueOf(current.getTargetTime()));
             holder.timePassedView.setText(String.valueOf(current.getTargetTime()));
         }else{
             holder.habitItemView.setText("No Occurrence");

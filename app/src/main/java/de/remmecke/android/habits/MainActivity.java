@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements HabitsAdapter.Hab
     public void onClick(Occurrence clickedOcc, String action) {
         switch (action){
             case "addOccurrence":
-                clickedOcc.setName("test");
                 mHabitViewModel.editOcc(clickedOcc, "huh");
                 break;
             case "editHabit":

@@ -26,7 +26,6 @@ public class HabitViewModel extends AndroidViewModel {
 
     public void editOcc(Occurrence occ, String newName){
         occ.setName(newName);
-        String test  = occ.getName();
         mRepository.updateOcc(occ);
     }
 
