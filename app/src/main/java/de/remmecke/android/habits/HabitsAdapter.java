@@ -18,6 +18,9 @@ import de.remmecke.android.habits.data.Occurrence;
 public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewHolder> {
 
     private HabitsAdapterOnClickHandler mClickHandler;
+    private final LayoutInflater mInflater;
+    private List<Occurrence> mOccurrences; // cashed version of occs
+
 
     public interface HabitsAdapterOnClickHandler{
         void onClick(Occurrence clickedOcc, String action);
@@ -65,8 +68,6 @@ public class HabitsAdapter extends RecyclerView.Adapter<HabitsAdapter.HabitViewH
         }
     }
 
-    private final LayoutInflater mInflater;
-    private List<Occurrence> mOccurrences;
 
 
 

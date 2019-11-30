@@ -15,7 +15,7 @@ public interface OccurrenceDao {
     void insert(Occurrence occurrence);
 
     @Update
-     void updateOcc(Occurrence... occs);
+    int updateOcc(Occurrence... occs);
 
     @Query("SELECT * " +
             "FROM Occurrence " +

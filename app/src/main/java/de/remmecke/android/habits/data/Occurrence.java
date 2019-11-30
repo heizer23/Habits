@@ -2,28 +2,26 @@ package de.remmecke.android.habits.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
-import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-@Entity()
+@Entity
 @TypeConverters(DateConverter.class)
 public class Occurrence {
 
     @PrimaryKey(autoGenerate = true)
     public Integer id;
 
-    private String name;
+    public String name;
 
-    private Date timeStamp;
+    public Date timeStamp;
 
     @ColumnInfo(name="target_time")
-    private Date targetTime;
+    public Date targetTime;
 
-    private Integer success;
+    public Integer success;
 
     public Occurrence(String name) {
         this.name = name;

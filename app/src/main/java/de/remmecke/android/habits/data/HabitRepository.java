@@ -94,7 +94,7 @@ public class HabitRepository {
 
         @Override
         protected Void doInBackground(Occurrence... occ) {
-            mAsyncTaskDao.updateOcc(occ);
+            int betroffene =  mAsyncTaskDao.updateOcc(occ);
             return null;
         }
     }

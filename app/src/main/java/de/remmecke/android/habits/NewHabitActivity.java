@@ -30,6 +30,7 @@ public class NewHabitActivity  extends AppCompatActivity implements View.OnClick
     }
 
 
+
     @Override
     public void onClick(View v) {
         String habitname = etName.getText().toString();
