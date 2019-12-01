@@ -2,6 +2,7 @@ package de.remmecke.android.habits.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
@@ -23,11 +24,20 @@ public class Occurrence {
 
     public Integer success;
 
+    @Ignore
     public Occurrence(String name) {
         this.name = name;
         timeStamp = new Date();
         this.targetTime = new Date();
         success = 0;
+    }
+
+    public Occurrence(int id, String name, Date timeStamp, Date targetTime, int success) {
+        this.id = id;
+        this.name = name;
+        this.timeStamp = timeStamp;
+        this.targetTime = targetTime;
+        this.success = success;
     }
 
     public String getName() {

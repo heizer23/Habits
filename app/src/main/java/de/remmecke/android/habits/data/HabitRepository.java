@@ -25,7 +25,6 @@ public class HabitRepository {
         return mAllHabits;
     }
 
-
     public void insertOccurrence(Occurrence occ){
         new insertAsyncOccurrence(mOccurrenceDao).execute(occ);
     }

@@ -23,7 +23,7 @@ public interface OccurrenceDao {
     )
     List<Occurrence> findOccurences();
 
-    @Query("SELECT name from Occurrence")
+    @Query("SELECT id, name, timeStamp, target_time, success from Occurrence")
     LiveData<List<Occurrence>> getOccurrences();
 
     @Query("UPDATE Occurrence set name = :name where id = :id")
